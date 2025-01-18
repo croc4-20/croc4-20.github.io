@@ -1284,10 +1284,10 @@ function dbg(text) {
 // === Body ===
 
 var ASM_CONSTS = {
-  7569488: () => { Module['emscripten_get_now_backup'] = performance.now; },  
- 7569543: ($0) => { performance.now = function() { return $0; }; },  
- 7569591: ($0) => { performance.now = function() { return $0; }; },  
- 7569639: () => { performance.now = Module['emscripten_get_now_backup']; }
+  7569648: () => { Module['emscripten_get_now_backup'] = performance.now; },  
+ 7569703: ($0) => { performance.now = function() { return $0; }; },  
+ 7569751: ($0) => { performance.now = function() { return $0; }; },  
+ 7569799: () => { performance.now = Module['emscripten_get_now_backup']; }
 };
 
 
@@ -18339,6 +18339,8 @@ var dynCall_vjiiiii = Module["dynCall_vjiiiii"] = createExportWrapper("dynCall_v
 var dynCall_jiiiii = Module["dynCall_jiiiii"] = createExportWrapper("dynCall_jiiiii");
 /** @type {function(...*):?} */
 var dynCall_ddiii = Module["dynCall_ddiii"] = createExportWrapper("dynCall_ddiii");
+/** @type {function(...*):?} */
+var dynCall_iiiffi = Module["dynCall_iiiffi"] = createExportWrapper("dynCall_iiiffi");
 /** @type {function(...*):?} */
 var dynCall_viidii = Module["dynCall_viidii"] = createExportWrapper("dynCall_viidii");
 /** @type {function(...*):?} */
