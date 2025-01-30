@@ -1284,10 +1284,10 @@ function dbg(text) {
 // === Body ===
 
 var ASM_CONSTS = {
-  7489760: () => { Module['emscripten_get_now_backup'] = performance.now; },  
- 7489815: ($0) => { performance.now = function() { return $0; }; },  
+  7489808: () => { Module['emscripten_get_now_backup'] = performance.now; },  
  7489863: ($0) => { performance.now = function() { return $0; }; },  
- 7489911: () => { performance.now = Module['emscripten_get_now_backup']; }
+ 7489911: ($0) => { performance.now = function() { return $0; }; },  
+ 7489959: () => { performance.now = Module['emscripten_get_now_backup']; }
 };
 
 
@@ -1683,33 +1683,31 @@ var ASM_CONSTS = {
      return stringOnWasmHeap;
   }
 
-  function _InitializeFirebase(callback) {
-          if (typeof firebase === 'undefined') {
-              console.error("❌ Firebase SDK not loaded! Ensure scripts are in index.html.");
-              return;
-          }
-  
-          console.log("⚙️ Initializing Firebase...");
-  
-          var firebaseConfig = {
-              apiKey: "AIzaSyAPqPvrJMC1Kd7M3aWIJKRZPBnQKwAIc_g",
-              authDomain: "pixel-a188a.firebaseapp.com",
-              projectId: "pixel-a188a",
-              storageBucket: "pixel-a188a.appspot.com",
-              messagingSenderId: "1051565452085",
-              appId: "1:1051565452085:web:38846df63666fd719f3a7c"
-          };
-  
+  function _InitializeFirebase(callbackPtr) {
           if (!firebase.apps.length) {
+              // Firebase configuration
+              var firebaseConfig = {
+                  apiKey: "AIzaSyAPqPvrJMC1Kd7M3aWIJKRZPBnQKwAIc_g",
+                  authDomain: "pixel-a188a.firebaseapp.com",
+                  projectId: "pixel-a188a",
+                  storageBucket: "pixel-a188a.appspot.com",
+                  messagingSenderId: "1051565452085",
+                  appId: "1:1051565452085:web:38846df63666fd719f3a7c"
+              };
               firebase.initializeApp(firebaseConfig);
-              console.log("✅ Firebase initialized successfully.");
+              console.log("Firebase initialized.");
           } else {
-              console.warn("⚠️ Firebase already initialized.");
+              console.log("Firebase already initialized.");
           }
   
-          // Notify Unity (C#) that Firebase is ready
-          if (callback) {
-              ccall('Runtime.dynCall', 'v', ['v', callback]); // Correct Unity WebGL call
+          // If Unity gave us a valid callback pointer, call it using dynCall
+          if (callbackPtr) {
+              
+               const table = Module.asm.__indirect_function_table;
+              const cb = table.get(callbackPtr);
+              cb();
+          } else {
+              console.error("Callback pointer is undefined. Initialization failed.");
           }
       }
 
@@ -8061,11 +8059,9 @@ var ASM_CONSTS = {
           const userRef = db.collection('RobotUsers').doc(username);
   
           userRef.get().then((doc) => {
-              const currentStats = doc.exists ? doc.data() : { 
-                  gamesPlayed: 0, 
-                  wins: 0, 
-                  losses: 0 
-              };
+              const currentStats = doc.exists
+                  ? doc.data()
+                  : { gamesPlayed: 0, wins: 0, losses: 0 };
   
               const updatedStats = {
                   username: username,
