@@ -1284,10 +1284,10 @@ function dbg(text) {
 // === Body ===
 
 var ASM_CONSTS = {
-  7490080: () => { Module['emscripten_get_now_backup'] = performance.now; },  
- 7490135: ($0) => { performance.now = function() { return $0; }; },  
- 7490183: ($0) => { performance.now = function() { return $0; }; },  
- 7490231: () => { performance.now = Module['emscripten_get_now_backup']; }
+  7490832: () => { Module['emscripten_get_now_backup'] = performance.now; },  
+ 7490887: ($0) => { performance.now = function() { return $0; }; },  
+ 7490935: ($0) => { performance.now = function() { return $0; }; },  
+ 7490983: () => { performance.now = Module['emscripten_get_now_backup']; }
 };
 
 
@@ -1664,6 +1664,39 @@ var ASM_CONSTS = {
       }
     }
 
+  function _GetLeaderboardData() {
+          console.log("⚡ GetLeaderboardData called (no pointer-based calls)");
+  
+          if (typeof firebase === 'undefined' || !firebase.firestore) {
+              console.error("❌ Firebase Firestore not initialized!");
+              return;
+          }
+  
+          const db = firebase.firestore();
+          db.collection('RobotUsers')
+            .orderBy('wins', 'desc')
+            .limit(10)
+            .get()
+            .then((querySnapshot) => {
+                const leaderboard = [];
+                querySnapshot.forEach((doc) => {
+                    leaderboard.push(doc.data());
+                });
+  
+                // Create an object with the "players" array, then convert to JSON.
+                const leaderboardJson = JSON.stringify({ players: leaderboard });
+                console.log("GetLeaderboardData Leaderboard JSON: ", leaderboardJson);
+                
+                // ---- CALL C# VIA SendMessage() ----
+                // 'PhotonManager' must match the name of the GameObject in Unity
+                // 'OnLeaderboardJsonReceived' is the method name in your C# script
+                SendMessage('PhotonManagerObj', 'OnLeaderboardJsonReceived', leaderboardJson);
+            })
+            .catch((error) => {
+                console.error("❌ GetLeaderboardData Error:", error);
+            });
+      }
+
   function _GetTelegramUsername() {
      var username = "Guest";
      try {
@@ -1687,7 +1720,7 @@ var ASM_CONSTS = {
           if (!firebase.apps.length) {
               // Firebase configuration
               var firebaseConfig = {
-                  apiKey: "AIzaSyAPqPvrJMC1Kd7M3aWIJKRZPBnQKwAIc_g",
+                   apiKey: "AIzaSyAPqPvrJMC1Kd7M3aWIJKRZPBnQKwAIc_g",
                   authDomain: "pixel-a188a.firebaseapp.com",
                   projectId: "pixel-a188a",
                   storageBucket: "pixel-a188a.appspot.com",
@@ -8048,10 +8081,9 @@ var ASM_CONSTS = {
 
   function _UpdateRobotLeaderboard(usernamePtr, didWin) {
           const username = UTF8ToString(usernamePtr);
-          console.log(`⚡ Updating Firebase Leaderboard for: ${username}`);
-  
+          
           if (typeof firebase === 'undefined' || !firebase.firestore) {
-              console.error("❌ Firebase Firestore not initialized!");
+              console.error(" Firebase Firestore not initialized!");
               return;
           }
   
@@ -8073,7 +8105,7 @@ var ASM_CONSTS = {
               return userRef.set(updatedStats);
           })
           .then(() => {
-              console.log(`✅ Successfully updated leaderboard for: ${username}`);
+              
           })
           .catch(error => console.error("❌ Error updating leaderboard:", error));
       }
@@ -17502,6 +17534,7 @@ function checkIncomingModuleAPI() {
 var wasmImports = {
   "GetJSLoadTimeInfo": _GetJSLoadTimeInfo,
   "GetJSMemoryInfo": _GetJSMemoryInfo,
+  "GetLeaderboardData": _GetLeaderboardData,
   "GetTelegramUsername": _GetTelegramUsername,
   "InitializeFirebase": _InitializeFirebase,
   "JS_Accelerometer_IsRunning": _JS_Accelerometer_IsRunning,
@@ -18446,6 +18479,8 @@ var dynCall_vjiiiii = Module["dynCall_vjiiiii"] = createExportWrapper("dynCall_v
 /** @type {function(...*):?} */
 var dynCall_jiiiii = Module["dynCall_jiiiii"] = createExportWrapper("dynCall_jiiiii");
 /** @type {function(...*):?} */
+var dynCall_viiifiii = Module["dynCall_viiifiii"] = createExportWrapper("dynCall_viiifiii");
+/** @type {function(...*):?} */
 var dynCall_iiiffi = Module["dynCall_iiiffi"] = createExportWrapper("dynCall_iiiffi");
 /** @type {function(...*):?} */
 var dynCall_viidii = Module["dynCall_viidii"] = createExportWrapper("dynCall_viidii");
@@ -18565,8 +18600,6 @@ var dynCall_vijiiii = Module["dynCall_vijiiii"] = createExportWrapper("dynCall_v
 var dynCall_vifiii = Module["dynCall_vifiii"] = createExportWrapper("dynCall_vifiii");
 /** @type {function(...*):?} */
 var dynCall_iiifiii = Module["dynCall_iiifiii"] = createExportWrapper("dynCall_iiifiii");
-/** @type {function(...*):?} */
-var dynCall_viiifiii = Module["dynCall_viiifiii"] = createExportWrapper("dynCall_viiifiii");
 /** @type {function(...*):?} */
 var dynCall_viiififi = Module["dynCall_viiififi"] = createExportWrapper("dynCall_viiififi");
 /** @type {function(...*):?} */
