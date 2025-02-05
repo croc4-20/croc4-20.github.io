@@ -1698,62 +1698,67 @@ var ASM_CONSTS = {
       }
 
   function _GetTelegramUsername() {
-      var username = "Guest";
-  
       function fetchUsername() {
-          try {
-              if (window.Telegram && window.Telegram.WebApp) {
-                  console.log("Telegram WebApp is available.");
-                  if (window.Telegram.WebApp.initDataUnsafe) {
-                      console.log("initDataUnsafe available:", window.Telegram.WebApp.initDataUnsafe);
-                      if (window.Telegram.WebApp.initDataUnsafe.user) {
-                          console.log("User data available:", window.Telegram.WebApp.initDataUnsafe.user);
-                          if (window.Telegram.WebApp.initDataUnsafe.user.username) {
-                              username = window.Telegram.WebApp.initDataUnsafe.user.username;
-                              console.log("Username retrieved:", username);
-                          } else {
-                              console.log("Username not available in user data.");
-                          }
-                      } else {
-                          console.log("User data not available in initDataUnsafe.");
-                      }
-                  } else {
-                      console.log("initDataUnsafe not available.");
-                  }
+        var username = "Guest";
+        try {
+          if (window.Telegram && window.Telegram.WebApp) {
+            console.log("Telegram WebApp is available.");
+            if (window.Telegram.WebApp.initDataUnsafe) {
+              console.log("initDataUnsafe available:", window.Telegram.WebApp.initDataUnsafe);
+              if (window.Telegram.WebApp.initDataUnsafe.user) {
+                console.log("User data available:", window.Telegram.WebApp.initDataUnsafe.user);
+                if (window.Telegram.WebApp.initDataUnsafe.user.username) {
+                  username = window.Telegram.WebApp.initDataUnsafe.user.username;
+                  console.log("Username retrieved:", username);
+                } else {
+                  console.log("Username not available in user data.");
+                }
               } else {
-                  console.log("Telegram WebApp is not available.");
+                console.log("User data not available in initDataUnsafe.");
               }
-          } catch (e) {
-              console.error("Error getting Telegram username:", e);
+            } else {
+              console.log("initDataUnsafe not available.");
+            }
+          } else {
+            console.log("Telegram WebApp is not available.");
           }
+        } catch (e) {
+          console.error("Error getting Telegram username:", e);
+        }
+        
+        // Push the username to Unity via SendMessage.
+        // Note: Make sure "TelegramManagerObj" matches the name of your Unity GameObject.
+        SendMessage("TelegramManagerObj", "OnTelegramUsernameReceived", username);
   
-          var lengthBytes = lengthBytesUTF8(username) + 1;
-          var stringOnWasmHeap = _malloc(lengthBytes);
-          stringToUTF8(username, stringOnWasmHeap, lengthBytes);
-          return stringOnWasmHeap;
+        // If you still need to return a pointer (for legacy reasons), you can do so.
+        var lengthBytes = lengthBytesUTF8(username) + 1;
+        var stringOnWasmHeap = _malloc(lengthBytes);
+        stringToUTF8(username, stringOnWasmHeap, lengthBytes);
+        console.log("Username pointer returned:", stringOnWasmHeap);
+        return stringOnWasmHeap;
       }
   
-      // Ensure the Telegram WebApp script is loaded before accessing it
       if (window.Telegram && window.Telegram.WebApp) {
-          // Use the correct method to initialize the WebApp
-          if (window.Telegram.WebApp.ready) {
-              window.Telegram.WebApp.ready();
-          }
-          fetchUsername();
+        if (window.Telegram.WebApp.ready) {
+          window.Telegram.WebApp.ready();
+        }
+        return fetchUsername();
       } else {
-          // If the script is not loaded, wait for it to load
-          window.addEventListener('load', function() {
-              if (window.Telegram && window.Telegram.WebApp) {
-                  if (window.Telegram.WebApp.ready) {
-                      window.Telegram.WebApp.ready();
-                  }
-                  fetchUsername();
-              } else {
-                  console.error("Telegram WebApp script is not loaded.");
-              }
-          });
+        // If the Telegram WebApp isn’t loaded yet, register an event listener.
+        window.addEventListener('load', function() {
+          if (window.Telegram && window.Telegram.WebApp) {
+            if (window.Telegram.WebApp.ready) {
+              window.Telegram.WebApp.ready();
+            }
+            fetchUsername();
+          } else {
+            console.error("Telegram WebApp script is not loaded.");
+          }
+        });
+        // Return 0 since the username isn’t available immediately.
+        return 0;
       }
-  }
+    }
 
   function _InitializeFirebase(callbackPtr) {
           if (!firebase.apps.length) {
