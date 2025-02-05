@@ -1699,24 +1699,21 @@ var ASM_CONSTS = {
 
   function _GetTelegramUsername() {
           if (typeof Telegram !== "undefined" && Telegram.WebApp && Telegram.WebApp.initDataUnsafe) {
-              // Safely retrieve the username or use "Guest" as a fallback
-              const username = (Telegram.WebApp.initDataUnsafe.user && Telegram.WebApp.initDataUnsafe.user.username) ? Telegram.WebApp.initDataUnsafe.user.username : "Guest";
-              console.log("Telegram Username:", username);
+              // Ensure the user data exists
+              let username = "Guest";
+              if (Telegram.WebApp.initDataUnsafe.user && Telegram.WebApp.initDataUnsafe.user.username) {
+                  username = Telegram.WebApp.initDataUnsafe.user.username;
+              }
+              console.log("✅ Telegram Username Retrieved: " + username);
   
-              // Allocate memory and copy the username string to it
-              const bufferSize = lengthBytesUTF8(username) + 1; // +1 for null terminator
-              const buffer = _malloc(bufferSize);
-              stringToUTF8(username, buffer, bufferSize);
+              // Allocate memory for the string and return pointer
+              const length = lengthBytesUTF8(username) + 1;
+              const buffer = _malloc(length);
+              stringToUTF8(username, buffer, length);
               return buffer;
           } else {
-              console.error("Telegram WebApp is not initialized or unavailable.");
-              
-              // Return "Guest" if Telegram is not available
-              const fallbackUsername = "Guest";
-              const bufferSize = lengthBytesUTF8(fallbackUsername) + 1; // +1 for null terminator
-              const buffer = _malloc(bufferSize);
-              stringToUTF8(fallbackUsername, buffer, bufferSize);
-              return buffer;
+              console.error("❌ Telegram WebApp is not available.");
+              return 0; // Return null pointer
           }
       }
 
