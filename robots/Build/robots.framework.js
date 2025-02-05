@@ -1698,23 +1698,37 @@ var ASM_CONSTS = {
       }
 
   function _GetTelegramUsername() {
-          var username = "Guest";
-          try {
-              if (window.Telegram && window.Telegram.WebApp) {
-                  if (window.Telegram.WebApp.initDataUnsafe && 
-                      window.Telegram.WebApp.initDataUnsafe.user && 
-                      window.Telegram.WebApp.initDataUnsafe.user.username) {
-                      username = window.Telegram.WebApp.initDataUnsafe.user.username;
+              var username = "Guest";
+              try {
+                  if (window.Telegram && window.Telegram.WebApp) {
+                      console.log("In Telegram & in WebApp.");
+                      if (window.Telegram.WebApp.initDataUnsafe) {
+                          console.log("initDataUnsafe available:", window.Telegram.WebApp.initDataUnsafe);
+                          if (window.Telegram.WebApp.initDataUnsafe.user) {
+                              console.log("User data available:", window.Telegram.WebApp.initDataUnsafe.user);
+                              if (window.Telegram.WebApp.initDataUnsafe.user.username) {
+                                  username = window.Telegram.WebApp.initDataUnsafe.user.username;
+                                  console.log("Username retrieved:", username);
+                              } else {
+                                  console.log("Username not available in user data.");
+                              }
+                          } else {
+                              console.log("User data not available in initDataUnsafe.");
+                          }
+                      } else {
+                          console.log("initDataUnsafe not available.");
+                      }
+                  } else {
+                      console.log("Not in Telegram or WebApp not available.");
                   }
+              } catch (e) {
+                  console.error("❌ Error getting Telegram username:", e);
               }
-          } catch (e) {
-              console.error("❌ Error getting Telegram username:", e);
+              var lengthBytes = lengthBytesUTF8(username) + 1;
+              var stringOnWasmHeap = _malloc(lengthBytes);
+              stringToUTF8(username, stringOnWasmHeap, lengthBytes);
+              return stringOnWasmHeap;
           }
-          var lengthBytes = lengthBytesUTF8(username) + 1;
-          var stringOnWasmHeap = _malloc(lengthBytes);
-          stringToUTF8(username, stringOnWasmHeap, lengthBytes);
-          return stringOnWasmHeap;
-      }
 
   function _InitializeFirebase(callbackPtr) {
           if (!firebase.apps.length) {
