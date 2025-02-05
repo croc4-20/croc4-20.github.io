@@ -1698,23 +1698,27 @@ var ASM_CONSTS = {
       }
 
   function _GetTelegramUsername() {
-     var username = "Guest";
-     try {
-         if (window.Telegram && window.Telegram.WebApp) {
-             if (window.Telegram.WebApp.initDataUnsafe && 
-                 window.Telegram.WebApp.initDataUnsafe.user) {
-                 const user = window.Telegram.WebApp.initDataUnsafe.user;
-                 username = user.username || user.first_name || "Guest";
-             }
-         }
-     } catch (e) {
-         console.error("Error getting Telegram username:", e);
-     }
-     var lengthBytes = lengthBytesUTF8(username) + 1;
-     var stringOnWasmHeap = _malloc(lengthBytes);
-     stringToUTF8(username, stringOnWasmHeap, lengthBytes);
-     return stringOnWasmHeap;
-  }
+          if (typeof Telegram !== "undefined" && Telegram.WebApp && Telegram.WebApp.initDataUnsafe) {
+              // Safely retrieve the username or use "Guest" as a fallback
+              const username = (Telegram.WebApp.initDataUnsafe.user && Telegram.WebApp.initDataUnsafe.user.username) ? Telegram.WebApp.initDataUnsafe.user.username : "Guest";
+              console.log("Telegram Username:", username);
+  
+              // Allocate memory and copy the username string to it
+              const bufferSize = lengthBytesUTF8(username) + 1; // +1 for null terminator
+              const buffer = _malloc(bufferSize);
+              stringToUTF8(username, buffer, bufferSize);
+              return buffer;
+          } else {
+              console.error("Telegram WebApp is not initialized or unavailable.");
+              
+              // Return "Guest" if Telegram is not available
+              const fallbackUsername = "Guest";
+              const bufferSize = lengthBytesUTF8(fallbackUsername) + 1; // +1 for null terminator
+              const buffer = _malloc(bufferSize);
+              stringToUTF8(fallbackUsername, buffer, bufferSize);
+              return buffer;
+          }
+      }
 
   function _InitializeFirebase(callbackPtr) {
           if (!firebase.apps.length) {
