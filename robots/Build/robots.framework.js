@@ -1698,37 +1698,47 @@ var ASM_CONSTS = {
       }
 
   function _GetTelegramUsername() {
-              var username = "Guest";
-              try {
-                  if (window.Telegram && window.Telegram.WebApp) {
-                      console.log("In Telegram & in WebApp.");
-                      if (window.Telegram.WebApp.initDataUnsafe) {
-                          console.log("initDataUnsafe available:", window.Telegram.WebApp.initDataUnsafe);
-                          if (window.Telegram.WebApp.initDataUnsafe.user) {
-                              console.log("User data available:", window.Telegram.WebApp.initDataUnsafe.user);
-                              if (window.Telegram.WebApp.initDataUnsafe.user.username) {
-                                  username = window.Telegram.WebApp.initDataUnsafe.user.username;
-                                  console.log("Username retrieved:", username);
-                              } else {
-                                  console.log("Username not available in user data.");
-                              }
+      var username = "Guest";
+  
+      function fetchUsername() {
+          try {
+              if (window.Telegram && window.Telegram.WebApp) {
+                  console.log("In Telegram & in WebApp.");
+                  if (window.Telegram.WebApp.initDataUnsafe) {
+                      console.log("initDataUnsafe available:", window.Telegram.WebApp.initDataUnsafe);
+                      if (window.Telegram.WebApp.initDataUnsafe.user) {
+                          console.log("User data available:", window.Telegram.WebApp.initDataUnsafe.user);
+                          if (window.Telegram.WebApp.initDataUnsafe.user.username) {
+                              username = window.Telegram.WebApp.initDataUnsafe.user.username;
+                              console.log("Username retrieved:", username);
                           } else {
-                              console.log("User data not available in initDataUnsafe.");
+                              console.log("❌Username not available in user data.");
                           }
                       } else {
-                          console.log("initDataUnsafe not available.");
+                          console.log("❌User data not available in initDataUnsafe.");
                       }
                   } else {
-                      console.log("Not in Telegram or WebApp not available.");
+                      console.log("❌initDataUnsafe not available.");
                   }
-              } catch (e) {
-                  console.error("❌ Error getting Telegram username:", e);
+              } else {
+                  console.log("❌Not in Telegram or WebApp not available.");
               }
-              var lengthBytes = lengthBytesUTF8(username) + 1;
-              var stringOnWasmHeap = _malloc(lengthBytes);
-              stringToUTF8(username, stringOnWasmHeap, lengthBytes);
-              return stringOnWasmHeap;
+          } catch (e) {
+              console.error("❌ Error getting Telegram username:", e);
           }
+  
+          var lengthBytes = lengthBytesUTF8(username) + 1;
+          var stringOnWasmHeap = _malloc(lengthBytes);
+          stringToUTF8(username, stringOnWasmHeap, lengthBytes);
+          return stringOnWasmHeap;
+      }
+  
+      if (window.Telegram && window.Telegram.WebApp) {
+          Telegram.WebApp.ready().then(fetchUsername);
+      } else {
+          fetchUsername();
+      }
+  }
 
   function _InitializeFirebase(callbackPtr) {
           if (!firebase.apps.length) {
