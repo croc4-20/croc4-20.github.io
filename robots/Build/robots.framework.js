@@ -1698,23 +1698,22 @@ var ASM_CONSTS = {
       }
 
   function _GetTelegramUsername() {
-          if (typeof Telegram !== "undefined" && Telegram.WebApp && Telegram.WebApp.initDataUnsafe) {
-              // Ensure the user data exists
-              let username = "Guest";
-              if (Telegram.WebApp.initDataUnsafe.user && Telegram.WebApp.initDataUnsafe.user.username) {
-                  username = Telegram.WebApp.initDataUnsafe.user.username;
+          var username = "Guest";
+          try {
+              if (window.Telegram && window.Telegram.WebApp) {
+                  if (window.Telegram.WebApp.initDataUnsafe && 
+                      window.Telegram.WebApp.initDataUnsafe.user && 
+                      window.Telegram.WebApp.initDataUnsafe.user.username) {
+                      username = window.Telegram.WebApp.initDataUnsafe.user.username;
+                  }
               }
-              console.log("✅ Telegram Username Retrieved: " + username);
-  
-              // Allocate memory for the string and return pointer
-              const length = lengthBytesUTF8(username) + 1;
-              const buffer = _malloc(length);
-              stringToUTF8(username, buffer, length);
-              return buffer;
-          } else {
-              console.error("❌ Telegram WebApp is not available.");
-              return 0; // Return null pointer
+          } catch (e) {
+              console.error("❌ Error getting Telegram username:", e);
           }
+          var lengthBytes = lengthBytesUTF8(username) + 1;
+          var stringOnWasmHeap = _malloc(lengthBytes);
+          stringToUTF8(username, stringOnWasmHeap, lengthBytes);
+          return stringOnWasmHeap;
       }
 
   function _InitializeFirebase(callbackPtr) {
