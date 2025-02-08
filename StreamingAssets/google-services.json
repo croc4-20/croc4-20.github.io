@@ -1,0 +1,19 @@
+{
+  "project_info": {
+    "project_id": "pixel-a188a",
+    "firebase_url": "https://pixel-a188a-default-rtdb.europe-west1.firebasedatabase.app",
+    "storage_bucket": "pixel-a188a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1051565452085:web:51c101e52d62b71f9f3a7c", 
+        "api_key": [
+          {
+            "current_key": "AIzaSyAPqPvrJMC1Kd7M3aWIJKRZPBnQKwAIc_g"
+          }
+        ]
+      }
+    }
+  ]
+}

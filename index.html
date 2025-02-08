@@ -1,12 +1,23 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
+    <meta http-equiv='Content-Security-Policy' content="
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://www.gstatic.com https://apis.google.com https://telegram.org;
+    connect-src 'self' https://firestore.googleapis.com wss: ws:;
+    worker-src 'self';
+">
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Unity Web Player | TestRobotGame</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
-  </head>
+  
+            <script src='https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js'></script>
+            <script src='https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js'></script>
+            <script src='FIREBASE-1.js'></script>
+        
+            <script async src='https://telegram.org/js/telegram-web-app.js'></script>
+        </head>
   <body>
     <div id="unity-container" class="unity-desktop">
       <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
@@ -52,12 +63,12 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/robottesweb.loader.js";
+      var loaderUrl = buildUrl + "/croc4-20.github.io.loader.js";
       var config = {
         arguments: [],
-        dataUrl: buildUrl + "/robottesweb.data",
-        frameworkUrl: buildUrl + "/robottesweb.framework.js",
-        codeUrl: buildUrl + "/robottesweb.wasm",
+        dataUrl: buildUrl + "/croc4-20.github.io.data",
+        frameworkUrl: buildUrl + "/croc4-20.github.io.framework.js",
+        codeUrl: buildUrl + "/croc4-20.github.io.wasm",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
         productName: "TestRobotGame",
