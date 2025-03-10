@@ -43,6 +43,29 @@ if (typeof window !== 'undefined') {
         }
     };
 }
+
+if (typeof window !== 'undefined') {
+  window.SaveRobotData = function(userId, robotId, robotJson) {
+    if (!firebase.firestore) {
+        console.error("Firestore is not available!");
+        return;
+    }
+
+    var db = firebase.firestore();
+    var robotData = JSON.parse(robotJson); // Convert string to JSON object
+
+    db.collection("users").doc(userId).collection("robots").doc(robotId).set(robotData)
+        .then(() => {
+            console.log(`✅ Robot ${robotId} saved successfully for user ${userId}.`);
+            SendMessage("FireBaseManager", "OnRobotDataSaved", "success");
+        })
+        .catch((error) => {
+            console.error("❌ Error saving robot: ", error);
+            SendMessage("FireBaseManager", "OnRobotDataSaved", "error");
+        });
+};
+}
+
 // (function() {
 //     // Initialize Firebase if not already initialized.
 //     if (!firebase.apps.length) {
