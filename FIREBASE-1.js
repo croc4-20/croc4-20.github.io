@@ -54,7 +54,7 @@ if (typeof window !== 'undefined') {
     var db = firebase.firestore();
     var robotData = JSON.parse(robotJson); // Convert string to JSON object
 
-    db.collection("users").doc(userId).collection("robots").doc(robotId).set(robotData)
+    db.collection("customRobots").doc(userId).collection("robots").doc(robotId).set(robotData)
         .then(() => {
             console.log(`✅ Robot ${robotId} saved successfully for user ${userId}.`);
             SendMessage("FireBaseManager", "OnRobotDataSaved", "success");

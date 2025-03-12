@@ -1284,10 +1284,10 @@ function dbg(text) {
 // === Body ===
 
 var ASM_CONSTS = {
-  7496960: () => { Module['emscripten_get_now_backup'] = performance.now; },  
- 7497015: ($0) => { performance.now = function() { return $0; }; },  
- 7497063: ($0) => { performance.now = function() { return $0; }; },  
- 7497111: () => { performance.now = Module['emscripten_get_now_backup']; }
+  7497184: () => { Module['emscripten_get_now_backup'] = performance.now; },  
+ 7497239: ($0) => { performance.now = function() { return $0; }; },  
+ 7497287: ($0) => { performance.now = function() { return $0; }; },  
+ 7497335: () => { performance.now = Module['emscripten_get_now_backup']; }
 };
 
 
@@ -8010,6 +8010,14 @@ var ASM_CONSTS = {
   
           requestOptions.timeout = timeout;
   	}
+
+  function _SaveRobotDataExtern(userIdPtr, robotIdPtr, robotJsonPtr) {
+              var userId = UTF8ToString(userIdPtr);
+              var robotId = UTF8ToString(robotIdPtr);
+              var robotJson = UTF8ToString(robotJsonPtr);
+  
+              window.SaveRobotData(userId, robotId, robotJson);
+          }
 
   var webSocketInstances = [];
   function _SocketClose(socketInstance)
@@ -17681,6 +17689,7 @@ var wasmImports = {
   "JS_WebRequest_SetRedirectLimit": _JS_WebRequest_SetRedirectLimit,
   "JS_WebRequest_SetRequestHeader": _JS_WebRequest_SetRequestHeader,
   "JS_WebRequest_SetTimeout": _JS_WebRequest_SetTimeout,
+  "SaveRobotDataExtern": _SaveRobotDataExtern,
   "SocketClose": _SocketClose,
   "SocketCreate": _SocketCreate,
   "SocketError": _SocketError,
