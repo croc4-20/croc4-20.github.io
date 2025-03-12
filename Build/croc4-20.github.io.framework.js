@@ -1284,10 +1284,10 @@ function dbg(text) {
 // === Body ===
 
 var ASM_CONSTS = {
-  7497184: () => { Module['emscripten_get_now_backup'] = performance.now; },  
- 7497239: ($0) => { performance.now = function() { return $0; }; },  
- 7497287: ($0) => { performance.now = function() { return $0; }; },  
- 7497335: () => { performance.now = Module['emscripten_get_now_backup']; }
+  7497584: () => { Module['emscripten_get_now_backup'] = performance.now; },  
+ 7497639: ($0) => { performance.now = function() { return $0; }; },  
+ 7497687: ($0) => { performance.now = function() { return $0; }; },  
+ 7497735: () => { performance.now = Module['emscripten_get_now_backup']; }
 };
 
 
@@ -1759,6 +1759,11 @@ var ASM_CONSTS = {
         return 0;
       }
     }
+
+  function _GetUserRobotsExtern(userIdPtr) {
+          var userId = UTF8ToString(userIdPtr);
+          window.GetUserRobots(userId);
+      }
 
   function _InitializeFirebase(callbackPtr) {
           if (!firebase.apps.length) {
@@ -17588,6 +17593,7 @@ var wasmImports = {
   "GetJSMemoryInfo": _GetJSMemoryInfo,
   "GetLeaderboardData": _GetLeaderboardData,
   "GetTelegramUsername": _GetTelegramUsername,
+  "GetUserRobotsExtern": _GetUserRobotsExtern,
   "InitializeFirebase": _InitializeFirebase,
   "JS_Accelerometer_IsRunning": _JS_Accelerometer_IsRunning,
   "JS_Accelerometer_Start": _JS_Accelerometer_Start,

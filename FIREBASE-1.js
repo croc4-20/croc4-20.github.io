@@ -45,6 +45,33 @@ if (typeof window !== 'undefined') {
 }
 
 if (typeof window !== 'undefined') {
+  window.GetUserRobots = function(userId) {
+    if (!firebase.firestore) {
+      console.error("Firestore is not available!");
+      return;
+    }
+    var db = firebase.firestore();
+    db.collection("users").doc(userId).collection("robots").get()
+      .then((querySnapshot) => {
+        let robots = [];
+        querySnapshot.forEach((doc) => {
+          let data = doc.data();
+          data._robotId = doc.id; // store the doc ID for reference
+          robots.push(data);
+        });
+        let robotsJson = JSON.stringify(robots);
+        // Send the array of robots back to Unity
+        SendMessage("FireBaseManager", "OnUserRobotsReceived", robotsJson);
+      })
+      .catch((error) => {
+        console.error("❌ Error fetching user robots: ", error);
+        // Optionally send an error message back to Unity
+        SendMessage("FireBaseManager", "OnUserRobotsReceived", "error");
+      });
+  };
+}
+
+if (typeof window !== 'undefined') {
   window.SaveRobotData = function(userId, robotId, robotJson) {
     if (!firebase.firestore) {
         console.error("Firestore is not available!");
