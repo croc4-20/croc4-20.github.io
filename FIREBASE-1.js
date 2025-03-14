@@ -43,7 +43,14 @@ if (typeof window !== 'undefined') {
         }
     };
 }
-
+function safeSendMessage(objectName, methodName, message) {
+    if (typeof SendMessage === "function") {
+        SendMessage(objectName, methodName, message);
+    } else {
+        console.warn(`🔄 Waiting for Unity's SendMessage: ${methodName}`);
+        setTimeout(() => safeSendMessage(objectName, methodName, message), 100);
+    }
+}
 if (typeof window !== 'undefined') {
   window.GetUserRobots = function(userId) {
     if (!firebase.firestore) {
@@ -61,7 +68,10 @@ if (typeof window !== 'undefined') {
         });
         let robotsJson = JSON.stringify(robots);
         // Send the array of robots back to Unity
-        SendMessage("FireBaseManager", "OnUserRobotsReceived", robotsJson);
+
+        safeSendMessage("FireBaseManager", "OnUserRobotsReceived", robotsJson);
+
+        // SendMessage("FireBaseManager", "OnUserRobotsReceived", robotsJson);
       })
       .catch((error) => {
         console.error("❌ Error fetching user robots: ", error);
@@ -70,6 +80,7 @@ if (typeof window !== 'undefined') {
       });
   };
 }
+
 
 if (typeof window !== 'undefined') {
   window.SaveRobotData = function(userId, robotId, robotJson) {
