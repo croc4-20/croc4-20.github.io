@@ -58,7 +58,7 @@ if (typeof window !== 'undefined') {
       return;
     }
     var db = firebase.firestore();
-    db.collection("users").doc(userId).collection("robots").get()
+    db.collection("customRobots").doc(userId).collection("robots").get()
       .then((querySnapshot) => {
         let robots = [];
         querySnapshot.forEach((doc) => {
