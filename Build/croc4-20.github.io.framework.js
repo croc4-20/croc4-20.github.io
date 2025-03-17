@@ -1761,6 +1761,7 @@ var ASM_CONSTS = {
     }
 
   function _GetUserRobotsExtern(userIdPtr) {
+      console.log("⚡ GetUserRobotsExtern function called userID being:", userIdPtr);
           var userId = UTF8ToString(userIdPtr);
           window.GetUserRobots(userId);
       }
@@ -8017,6 +8018,7 @@ var ASM_CONSTS = {
   	}
 
   function _SaveRobotDataExtern(userIdPtr, robotIdPtr, robotJsonPtr) {
+  
               var userId = UTF8ToString(userIdPtr);
               var robotId = UTF8ToString(robotIdPtr);
               var robotJson = UTF8ToString(robotJsonPtr);
