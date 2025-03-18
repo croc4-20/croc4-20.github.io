@@ -44,22 +44,42 @@ if (typeof window !== 'undefined') {
         }
     };
 }
-function safeSendMessage(objectName, methodName, message) {
-    // if (!waiting) return;
-    console.log("GetUserRobotsExtern 🟢 SendMessage type:", typeof SendMessage);
-    if (typeof window.SendMessage === "function") {
-   window.SendMessage(objectName, methodName, message);
-} else {
-   console.warn('SendMessage still not available in window');
+function waitForUnityInstance() {
+  return new Promise((resolve, reject) => {
+    const check = () => {
+      if (window.unityInstance && typeof window.unityInstance.SendMessage === "function") {
+        console.log("✅ Unity instance is ready.");
+        resolve(window.unityInstance);
+      } else {
+        console.warn("⏳ Unity instance not ready yet. Retrying...");
+        setTimeout(check, 100);
+      }
+    };
+    check();
+  });
 }
-//     if (typeof SendMessage === "function") {
+// function safeSendMessage(objectName, methodName, message) {
+//     // if (!waiting) return;
+//     console.log("GetUserRobotsExtern 🟢 SendMessage type:", typeof SendMessage);
+//     if (typeof window.SendMessage === "function") {
+//    window.SendMessage(objectName, methodName, message);
+// } else {
+//    console.warn('SendMessage still not available in window');
+// }
+// //     if (typeof SendMessage === "function") {
 
-//         SendMessage(objectName, methodName, message);
-//     } else {
-//         console.warn(`🔄 Waiting for Unity's SendMessage: ${methodName}`);
-//         setTimeout(() => safeSendMessage(objectName, methodName, message), 100);
-//     }
- }
+// //         SendMessage(objectName, methodName, message);
+// //     } else {
+// //         console.warn(`🔄 Waiting for Unity's SendMessage: ${methodName}`);
+// //         setTimeout(() => safeSendMessage(objectName, methodName, message), 100);
+// //     }
+//  }
+function safeSendMessage(objectName, methodName, message) {
+    waitForUnityInstance().then((instance) => {
+        console.log(`🚀 Sending message to ${objectName}.${methodName}`);
+        instance.SendMessage(objectName, methodName, message);
+    });
+}
 if (typeof window !== 'undefined') {
   window.GetUserRobots = function(userId) {
     if (!firebase.firestore) {
