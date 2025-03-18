@@ -46,8 +46,9 @@ if (typeof window !== 'undefined') {
 }
 function safeSendMessage(objectName, methodName, message) {
     if (!waiting) return;
-    
+    console.log("GetUserRobotsExtern 🟢 SendMessage type:", typeof SendMessage);
     if (typeof SendMessage === "function") {
+
         SendMessage(objectName, methodName, message);
     } else {
         console.warn(`🔄 Waiting for Unity's SendMessage: ${methodName}`);
