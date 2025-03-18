@@ -45,7 +45,7 @@ if (typeof window !== 'undefined') {
     };
 }
 function safeSendMessage(objectName, methodName, message) {
-    if (!waiting) return;
+    // if (!waiting) return;
     console.log("GetUserRobotsExtern 🟢 SendMessage type:", typeof SendMessage);
     if (typeof SendMessage === "function") {
 
