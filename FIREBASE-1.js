@@ -71,6 +71,7 @@ if (typeof window !== 'undefined') {
         console.log("GetUserRobotsExtern robotsJson being, ", robotsJson)
 
         safeSendMessage("FireBaseManager", "OnUserRobotsReceived", robotsJson);
+        waiting = false;
 
         // SendMessage("FireBaseManager", "OnUserRobotsReceived", robotsJson);
       })
