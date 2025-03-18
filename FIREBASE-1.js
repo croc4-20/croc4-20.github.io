@@ -47,14 +47,19 @@ if (typeof window !== 'undefined') {
 function safeSendMessage(objectName, methodName, message) {
     // if (!waiting) return;
     console.log("GetUserRobotsExtern 🟢 SendMessage type:", typeof SendMessage);
-    if (typeof SendMessage === "function") {
-
-        SendMessage(objectName, methodName, message);
-    } else {
-        console.warn(`🔄 Waiting for Unity's SendMessage: ${methodName}`);
-        setTimeout(() => safeSendMessage(objectName, methodName, message), 100);
-    }
+    if (typeof window.SendMessage === "function") {
+   window.SendMessage(objectName, methodName, message);
+} else {
+   console.warn('SendMessage still not available in window');
 }
+//     if (typeof SendMessage === "function") {
+
+//         SendMessage(objectName, methodName, message);
+//     } else {
+//         console.warn(`🔄 Waiting for Unity's SendMessage: ${methodName}`);
+//         setTimeout(() => safeSendMessage(objectName, methodName, message), 100);
+//     }
+// }
 if (typeof window !== 'undefined') {
   window.GetUserRobots = function(userId) {
     if (!firebase.firestore) {
