@@ -68,6 +68,7 @@ if (typeof window !== 'undefined') {
         });
         let robotsJson = JSON.stringify(robots);
         // Send the array of robots back to Unity
+        console.log("GetUserRobotsExtern robotsJson being, ", robotsJson)
 
         safeSendMessage("FireBaseManager", "OnUserRobotsReceived", robotsJson);
 
