@@ -59,7 +59,7 @@ function safeSendMessage(objectName, methodName, message) {
 //         console.warn(`🔄 Waiting for Unity's SendMessage: ${methodName}`);
 //         setTimeout(() => safeSendMessage(objectName, methodName, message), 100);
 //     }
-// }
+ }
 if (typeof window !== 'undefined') {
   window.GetUserRobots = function(userId) {
     if (!firebase.firestore) {
