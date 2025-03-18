@@ -1,3 +1,4 @@
+var waiting = true;
 if (!firebase.apps.length) {
     console.log("Initializing Firebase...");
     firebase.initializeApp({
@@ -44,6 +45,8 @@ if (typeof window !== 'undefined') {
     };
 }
 function safeSendMessage(objectName, methodName, message) {
+    if (!waiting) return;
+    
     if (typeof SendMessage === "function") {
         SendMessage(objectName, methodName, message);
     } else {
