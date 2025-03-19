@@ -58,6 +58,15 @@ function waitForUnityInstance() {
     check();
   });
 }
+function safeSendMessage(objectName, methodName, message) {
+    if (typeof window.SendMessage === "function") {
+        console.log(`🚀 Sending message to ${objectName}.${methodName}`);
+        window.SendMessage(objectName, methodName, message);
+    } else {
+        console.warn("SendMessage not available. Retrying...");
+        setTimeout(() => safeSendMessage(objectName, methodName, message), 100);
+    }
+}
 // function safeSendMessage(objectName, methodName, message) {
 //     // if (!waiting) return;
 //     console.log("GetUserRobotsExtern 🟢 SendMessage type:", typeof SendMessage);
@@ -74,12 +83,12 @@ function waitForUnityInstance() {
 // //         setTimeout(() => safeSendMessage(objectName, methodName, message), 100);
 // //     }
 //  }
-function safeSendMessage(objectName, methodName, message) {
-    waitForUnityInstance().then((instance) => {
-        console.log(`🚀 Sending message to ${objectName}.${methodName}`);
-        instance.SendMessage(objectName, methodName, message);
-    });
-}
+// function safeSendMessage(objectName, methodName, message) {
+//     waitForUnityInstance().then((instance) => {
+//         console.log(`🚀 Sending message to ${objectName}.${methodName}`);
+//         instance.SendMessage(objectName, methodName, message);
+//     });
+// }
 if (typeof window !== 'undefined') {
   window.GetUserRobots = function(userId) {
     if (!firebase.firestore) {
