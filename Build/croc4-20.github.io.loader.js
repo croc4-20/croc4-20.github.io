@@ -1,10 +1,6 @@
-function createUnityInstance(canvas, config, onProgress).then((instance) => {
-    window.unityInstance = instance;      // Make the instance globally accessible
-    window.isUnityBootstrapped = true;      // (Optional) Set a ready flag if you want extra confirmation
-    console.log("🎉 GetUserRobotsExtern Unity fully loaded and global variable set.");
-}).catch((error) => {
-    console.error("GetUserRobotsExtern Error loading Unity instance:", error);
-});
+function createUnityInstance(canvas, config, onProgress) {
+  onProgress = onProgress || function () {};
+
   function showBanner(msg, type) {
     // Only ever show one error at most - other banner messages after that should get ignored
     // to avoid noise.
