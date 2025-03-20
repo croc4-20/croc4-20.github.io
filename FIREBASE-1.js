@@ -58,13 +58,25 @@ function waitForUnityInstance() {
     check();
   });
 }
-function safeSendMessage(objectName, methodName, message) {
+// function safeSendMessage(objectName, methodName, message) {
+//     if (typeof window.SendMessage === "function") {
+//         console.log(`🚀 Sending message to ${objectName}.${methodName}`);
+//         window.SendMessage(objectName, methodName, message);
+//     } else {
+//         console.warn("SendMessage not available. Retrying...");
+//         setTimeout(() => safeSendMessage(objectName, methodName, message), 100);
+//     }
+// }
+function safeSendMessage(objectName, methodName, message, retries = 0) {
+    const MAX_RETRIES = 20; // Stop after 2 seconds (20 * 100ms)
     if (typeof window.SendMessage === "function") {
         console.log(`🚀 Sending message to ${objectName}.${methodName}`);
         window.SendMessage(objectName, methodName, message);
-    } else {
+    } else if (retries < MAX_RETRIES) {
         console.warn("SendMessage not available. Retrying...");
-        setTimeout(() => safeSendMessage(objectName, methodName, message), 100);
+        setTimeout(() => safeSendMessage(objectName, methodName, message, retries + 1), 100);
+    } else {
+        console.error("SendMessage failed after max retries.");
     }
 }
 // function safeSendMessage(objectName, methodName, message) {
