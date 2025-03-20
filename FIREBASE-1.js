@@ -107,32 +107,77 @@ if (typeof window !== 'undefined') {
       console.error("Firestore is not available!");
       return;
     }
+
+    // 1. Define a helper to wait for Unity
+    function waitForUnityInstance(callback, retries = 5) {
+      if (typeof unityInstance !== 'undefined') {
+        callback();
+      } else if (retries > 0) {
+        setTimeout(() => waitForUnityInstance(callback, retries - 1), 1000);
+      } else {
+        console.error("Unity instance never loaded!");
+      }
+    }
+
+    // 2. Fetch data
     var db = firebase.firestore();
     db.collection("customRobots").doc(userId).collection("robots").get()
       .then((querySnapshot) => {
         let robots = [];
         querySnapshot.forEach((doc) => {
           let data = doc.data();
-          data._robotId = doc.id; // store the doc ID for reference
+          data._robotId = doc.id;
           robots.push(data);
         });
-        let robotsJson = JSON.stringify(robots);
-        // Send the array of robots back to Unity
-        console.log("GetUserRobotsExtern robotsJson being, ", robotsJson)
-
-        // safeSendMessage("FireBaseManager", "OnUserRobotsReceived", robotsJson);
-        // waiting = false;
+        const robotsJson = JSON.stringify(robots);
         const encodedJson = encodeURIComponent(robotsJson);
-        unityInstance.SendMessage("FirebaseManager", "OnUserRobotsReceived", encodedJson);
-        // SendMessage("FireBaseManager", "OnUserRobotsReceived", robotsJson);
+
+        // 3. Wait for Unity before sending
+        waitForUnityInstance(() => {
+          unityInstance.SendMessage("FirebaseManager", "OnUserRobotsReceived", encodedJson);
+        });
       })
       .catch((error) => {
         console.error("❌ Error fetching user robots: ", error);
-        // Optionally send an error message back to Unity
-        SendMessage("FireBaseManager", "OnUserRobotsReceived", "error");
+        // 4. Fix SendMessage usage here too
+        waitForUnityInstance(() => {
+          unityInstance.SendMessage("FirebaseManager", "OnUserRobotsReceived", "error");
+        });
       });
   };
 }
+// if (typeof window !== 'undefined') {
+//   window.GetUserRobots = function(userId) {
+//     if (!firebase.firestore) {
+//       console.error("Firestore is not available!");
+//       return;
+//     }
+//     var db = firebase.firestore();
+//     db.collection("customRobots").doc(userId).collection("robots").get()
+//       .then((querySnapshot) => {
+//         let robots = [];
+//         querySnapshot.forEach((doc) => {
+//           let data = doc.data();
+//           data._robotId = doc.id; // store the doc ID for reference
+//           robots.push(data);
+//         });
+//         let robotsJson = JSON.stringify(robots);
+//         // Send the array of robots back to Unity
+//         console.log("GetUserRobotsExtern robotsJson being, ", robotsJson)
+
+//         // safeSendMessage("FireBaseManager", "OnUserRobotsReceived", robotsJson);
+//         // waiting = false;
+//         const encodedJson = encodeURIComponent(robotsJson);
+//         unityInstance.SendMessage("FirebaseManager", "OnUserRobotsReceived", encodedJson);
+//         // SendMessage("FireBaseManager", "OnUserRobotsReceived", robotsJson);
+//       })
+//       .catch((error) => {
+//         console.error("❌ Error fetching user robots: ", error);
+//         // Optionally send an error message back to Unity
+//         SendMessage("FireBaseManager", "OnUserRobotsReceived", "error");
+//       });
+//   };
+// }
 
 
 if (typeof window !== 'undefined') {
