@@ -79,28 +79,7 @@ function safeSendMessage(objectName, methodName, message, retries = 0) {
         console.error("SendMessage failed after max retries.");
     }
 }
-// function safeSendMessage(objectName, methodName, message) {
-//     // if (!waiting) return;
-//     console.log("GetUserRobotsExtern 🟢 SendMessage type:", typeof SendMessage);
-//     if (typeof window.SendMessage === "function") {
-//    window.SendMessage(objectName, methodName, message);
-// } else {
-//    console.warn('SendMessage still not available in window');
-// }
-// //     if (typeof SendMessage === "function") {
 
-// //         SendMessage(objectName, methodName, message);
-// //     } else {
-// //         console.warn(`🔄 Waiting for Unity's SendMessage: ${methodName}`);
-// //         setTimeout(() => safeSendMessage(objectName, methodName, message), 100);
-// //     }
-//  }
-// function safeSendMessage(objectName, methodName, message) {
-//     waitForUnityInstance().then((instance) => {
-//         console.log(`🚀 Sending message to ${objectName}.${methodName}`);
-//         instance.SendMessage(objectName, methodName, message);
-//     });
-// }
 if (typeof window !== 'undefined') {
   window.GetUserRobots = function(userId) {
     if (!firebase.firestore) {
@@ -108,16 +87,18 @@ if (typeof window !== 'undefined') {
       return;
     }
 
-    // 1. Define a helper to wait for Unity
-    // function waitForUnityInstance(callback, retries = 5) {
-    //   if (typeof unityInstance !== 'undefined') {
-    //     callback();
-    //   } else if (retries > 0) {
-    //     setTimeout(() => waitForUnityInstance(callback, retries - 1), 1000);
-    //   } else {
-    //     console.error("Unity instance never loaded!");
-    //   }
-    // }
+   
+    function waitForSendMessage(callback, retries = 20) {
+  if (typeof window.SendMessage === "function") {
+    console.log("✅ SendMessage is available.");
+    callback();
+  } else if (retries > 0) {
+    console.warn("⏳ SendMessage not available yet. Retrying...");
+    setTimeout(() => waitForSendMessage(callback, retries - 1), 100);
+  } else {
+    console.error("SendMessage not available after max retries.");
+  }
+}
     function waitForUnityInstance(callback) {
   const check = () => {
     console.log("GetUserRobotsExtern Checking for unityInstance...", window.unityInstance, window.isUnityBootstrapped);
@@ -130,33 +111,41 @@ if (typeof window !== 'undefined') {
   };
   check();
 }
-    // 2. Fetch data
+  if (typeof window !== "undefined") {
+  window.GetUserRobots = function(userId) {
+    if (!firebase.firestore) {
+      console.error("Firestore is not available!");
+      return;
+    }
+
     var db = firebase.firestore();
     db.collection("customRobots").doc(userId).collection("robots").get()
       .then((querySnapshot) => {
         let robots = [];
         querySnapshot.forEach((doc) => {
           let data = doc.data();
-          data._robotId = doc.id;
+          data._robotId = doc.id; // store the doc ID for reference
           robots.push(data);
         });
         const robotsJson = JSON.stringify(robots);
         const encodedJson = encodeURIComponent(robotsJson);
+        console.log("GetUserRobotsExtern robotsJson being: ", robotsJson);
 
-        // 3. Wait for Unity before sending
-        waitForUnityInstance(() => {
-          unityInstance.SendMessage("FirebaseManager", "OnUserRobotsReceived", encodedJson);
+        // Wait for SendMessage to be available then send the data to Unity
+        waitForSendMessage(() => {
+          console.log("🚀 Sending message to FirebaseManager.OnUserRobotsReceived", encodedJson);
+          window.SendMessage("FirebaseManager", "OnUserRobotsReceived", encodedJson);
         });
       })
       .catch((error) => {
         console.error("❌ Error fetching user robots: ", error);
-        // 4. Fix SendMessage usage here too
-        waitForUnityInstance(() => {
-          unityInstance.SendMessage("FirebaseManager", "OnUserRobotsReceived", "error");
+        waitForSendMessage(() => {
+          window.SendMessage("FirebaseManager", "OnUserRobotsReceived", "error");
         });
       });
   };
 }
+
 // if (typeof window !== 'undefined') {
 //   window.GetUserRobots = function(userId) {
 //     if (!firebase.firestore) {
