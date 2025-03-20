@@ -109,16 +109,27 @@ if (typeof window !== 'undefined') {
     }
 
     // 1. Define a helper to wait for Unity
-    function waitForUnityInstance(callback, retries = 5) {
-      if (typeof unityInstance !== 'undefined') {
-        callback();
-      } else if (retries > 0) {
-        setTimeout(() => waitForUnityInstance(callback, retries - 1), 1000);
-      } else {
-        console.error("Unity instance never loaded!");
-      }
+    // function waitForUnityInstance(callback, retries = 5) {
+    //   if (typeof unityInstance !== 'undefined') {
+    //     callback();
+    //   } else if (retries > 0) {
+    //     setTimeout(() => waitForUnityInstance(callback, retries - 1), 1000);
+    //   } else {
+    //     console.error("Unity instance never loaded!");
+    //   }
+    // }
+    function waitForUnityInstance(callback) {
+  const check = () => {
+    console.log("GetUserRobotsExtern Checking for unityInstance...", window.unityInstance, window.isUnityBootstrapped);
+    if (window.unityInstance && window.isUnityBootstrapped) {
+      console.log("✅ GetUserRobotsExtern  Unity instance and bootstrap confirmed.");
+      callback();
+    } else {
+      setTimeout(check, 100);
     }
-
+  };
+  check();
+}
     // 2. Fetch data
     var db = firebase.firestore();
     db.collection("customRobots").doc(userId).collection("robots").get()
