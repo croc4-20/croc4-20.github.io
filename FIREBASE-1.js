@@ -120,9 +120,10 @@ if (typeof window !== 'undefined') {
         // Send the array of robots back to Unity
         console.log("GetUserRobotsExtern robotsJson being, ", robotsJson)
 
-        safeSendMessage("FireBaseManager", "OnUserRobotsReceived", robotsJson);
-        waiting = false;
-
+        // safeSendMessage("FireBaseManager", "OnUserRobotsReceived", robotsJson);
+        // waiting = false;
+        const encodedJson = encodeURIComponent(robotsJson);
+        unityInstance.SendMessage("FirebaseManager", "OnUserRobotsReceived", encodedJson);
         // SendMessage("FireBaseManager", "OnUserRobotsReceived", robotsJson);
       })
       .catch((error) => {
