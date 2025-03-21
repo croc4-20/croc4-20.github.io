@@ -111,40 +111,36 @@ if (typeof window !== 'undefined') {
   };
   check();
 }
-  if (typeof window !== "undefined") {
-  window.GetUserRobots = function(userId) {
-    if (!firebase.firestore) {
-      console.error("Firestore is not available!");
-      return;
-    }
-
-    var db = firebase.firestore();
-    db.collection("customRobots").doc(userId).collection("robots").get()
-      .then((querySnapshot) => {
-        let robots = [];
-        querySnapshot.forEach((doc) => {
-          let data = doc.data();
-          data._robotId = doc.id; // store the doc ID for reference
-          robots.push(data);
-        });
-        const robotsJson = JSON.stringify(robots);
-        const encodedJson = encodeURIComponent(robotsJson);
-        console.log("GetUserRobotsExtern robotsJson being: ", robotsJson);
-
-        // Wait for SendMessage to be available then send the data to Unity
-        waitForSendMessage(() => {
-          console.log("🚀 Sending message to FirebaseManager.OnUserRobotsReceived", encodedJson);
-          window.SendMessage("FirebaseManager", "OnUserRobotsReceived", encodedJson);
-        });
-      })
-      .catch((error) => {
-        console.error("❌ Error fetching user robots: ", error);
-        waitForSendMessage(() => {
-          window.SendMessage("FirebaseManager", "OnUserRobotsReceived", "error");
-        });
+  window.GetUserRobots = function (userId) {
+  // 1. Query Firestore
+  var db = firebase.firestore();
+  db.collection("customRobots").doc(userId).collection("robots").get()
+    .then((querySnapshot) => {
+      let robots = [];
+      querySnapshot.forEach((doc) => {
+        let data = doc.data();
+        data._robotId = doc.id;
+        robots.push(data);
       });
-  };
-}
+
+      // 2. Convert to JSON
+      let robotsJson = JSON.stringify(robots);
+
+      // 3. (Optional) encode if you have special characters
+      let encodedJson = encodeURIComponent(robotsJson);
+
+      console.log("GetUserRobotsExtern => JSON: ", robotsJson);
+
+      // 4. Send to Unity
+      //    Must EXACTLY match the GameObject name: "FireBaseManager"
+      //    Must EXACTLY match the method name: "OnUserRobotsReceived"
+      SendMessage("FireBaseManager", "OnUserRobotsReceived", encodedJson);
+    })
+    .catch((error) => {
+      console.error("❌ Error fetching user robots: ", error);
+      SendMessage("FireBaseManager", "OnUserRobotsReceived", "error");
+    });
+};
 
 // if (typeof window !== 'undefined') {
 //   window.GetUserRobots = function(userId) {
