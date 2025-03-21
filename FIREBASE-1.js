@@ -57,11 +57,11 @@ if (typeof window !== 'undefined') {
       querySnapshot.forEach((doc) => {
         try {
             let data = doc.data();
-            console.log("📄 Raw Firestore doc: ", JSON.stringify(data));
+            console.log("📄 GetUserRobotsExtern Raw Firestore doc: ", JSON.stringify(data));
             data._robotId = doc.id;
             robots.push(data);
         } catch (err) {
-            console.error("🔥 Error processing document: ", doc.id, err);
+            console.error("🔥  GetUserRobotsExtern Error processing document: ", doc.id, err);
         }
     });
 
