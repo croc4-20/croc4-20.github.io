@@ -1787,11 +1787,13 @@ var ASM_CONSTS = {
             robots.push(data);
           });
           var robotsJson = JSON.stringify(robots);
+          var encodedJson = encodeURIComponent(robotsJson); // Add this line
+  
           console.log("✅ Got user robots JSON:", robotsJson);
   
           // 3. Send the JSON string back to Unity
           if (typeof SendMessage === "function") {
-            SendMessage("FireBaseManager", "OnUserRobotsReceived", robotsJson);
+            SendMessage("FireBaseManager", "OnUserRobotsReceived", encodedJson);
           } else {
             console.warn("SendMessage is not defined!");
           }
