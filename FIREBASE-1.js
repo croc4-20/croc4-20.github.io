@@ -45,12 +45,6 @@ if (typeof window !== 'undefined') {
     };
 }
 
-if (typeof window !== 'undefined') {
-  window.GetUserRobots = function(userId) {
-    if (!firebase.firestore) {
-      console.error("Firestore is not available!");
-      return;
-    }
 
    
     
