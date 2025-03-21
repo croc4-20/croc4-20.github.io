@@ -44,41 +44,6 @@ if (typeof window !== 'undefined') {
         }
     };
 }
-function waitForUnityInstance() {
-  return new Promise((resolve, reject) => {
-    const check = () => {
-      if (window.unityInstance && typeof window.unityInstance.SendMessage === "function") {
-        console.log("✅ Unity instance is ready.");
-        resolve(window.unityInstance);
-      } else {
-        console.warn("⏳ Unity instance not ready yet. Retrying...");
-        setTimeout(check, 100);
-      }
-    };
-    check();
-  });
-}
-// function safeSendMessage(objectName, methodName, message) {
-//     if (typeof window.SendMessage === "function") {
-//         console.log(`🚀 Sending message to ${objectName}.${methodName}`);
-//         window.SendMessage(objectName, methodName, message);
-//     } else {
-//         console.warn("SendMessage not available. Retrying...");
-//         setTimeout(() => safeSendMessage(objectName, methodName, message), 100);
-//     }
-// }
-function safeSendMessage(objectName, methodName, message, retries = 0) {
-    const MAX_RETRIES = 20; // Stop after 2 seconds (20 * 100ms)
-    if (typeof window.SendMessage === "function") {
-        console.log(`🚀 Sending message to ${objectName}.${methodName}`);
-        window.SendMessage(objectName, methodName, message);
-    } else if (retries < MAX_RETRIES) {
-        console.warn("SendMessage not available. Retrying...");
-        setTimeout(() => safeSendMessage(objectName, methodName, message, retries + 1), 100);
-    } else {
-        console.error("SendMessage failed after max retries.");
-    }
-}
 
 if (typeof window !== 'undefined') {
   window.GetUserRobots = function(userId) {
@@ -88,29 +53,7 @@ if (typeof window !== 'undefined') {
     }
 
    
-    function waitForSendMessage(callback, retries = 20) {
-  if (typeof window.SendMessage === "function") {
-    console.log("✅ SendMessage is available.");
-    callback();
-  } else if (retries > 0) {
-    console.warn("⏳ SendMessage not available yet. Retrying...");
-    setTimeout(() => waitForSendMessage(callback, retries - 1), 100);
-  } else {
-    console.error("SendMessage not available after max retries.");
-  }
-}
-    function waitForUnityInstance(callback) {
-  const check = () => {
-    console.log("GetUserRobotsExtern Checking for unityInstance...", window.unityInstance, window.isUnityBootstrapped);
-    if (window.unityInstance && window.isUnityBootstrapped) {
-      console.log("✅ GetUserRobotsExtern  Unity instance and bootstrap confirmed.");
-      callback();
-    } else {
-      setTimeout(check, 100);
-    }
-  };
-  check();
-}
+    
   window.GetUserRobotsExtern = function (userId) {
   // 1. Query Firestore
   var db = firebase.firestore();
@@ -118,10 +61,15 @@ if (typeof window !== 'undefined') {
     .then((querySnapshot) => {
       let robots = [];
       querySnapshot.forEach((doc) => {
-        let data = doc.data();
-        data._robotId = doc.id;
-        robots.push(data);
-      });
+        try {
+            let data = doc.data();
+            console.log("📄 Raw Firestore doc: ", JSON.stringify(data));
+            data._robotId = doc.id;
+            robots.push(data);
+        } catch (err) {
+            console.error("🔥 Error processing document: ", doc.id, err);
+        }
+    });
 
       // 2. Convert to JSON
       let robotsJson = JSON.stringify(robots);
@@ -137,7 +85,7 @@ if (typeof window !== 'undefined') {
       SendMessage("FireBaseManager", "OnUserRobotsReceived", encodedJson);
     })
     .catch((error) => {
-      console.error("❌ Error fetching user robots: ", error);
+      console.error("GetUserRobotsExtern ❌ Error fetching user robots: ", error);
       SendMessage("FireBaseManager", "OnUserRobotsReceived", "error");
     });
 };
