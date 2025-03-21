@@ -111,7 +111,7 @@ if (typeof window !== 'undefined') {
   };
   check();
 }
-  window.GetUserRobots = function (userId) {
+  window.GetUserRobotsExtern = function (userId) {
   // 1. Query Firestore
   var db = firebase.firestore();
   db.collection("customRobots").doc(userId).collection("robots").get()
