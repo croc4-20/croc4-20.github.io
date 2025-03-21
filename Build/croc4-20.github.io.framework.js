@@ -1761,10 +1761,48 @@ var ASM_CONSTS = {
     }
 
   function _GetUserRobotsExtern(userIdPtr) {
-      console.log("⚡ GetUserRobotsExtern function called userID being:", userIdPtr);
-          var userId = UTF8ToString(userIdPtr);
-          window.GetUserRobots(userId);
+      var userId = UTF8ToString(userIdPtr);
+      console.log("⚡ GetUserRobotsExtern called with userId =", userId);
+  
+      // 1. Check for Firebase Firestore
+      if (!firebase || !firebase.firestore) {
+        console.error("Firestore not available!");
+        // Return "error" to Unity:
+        if (typeof SendMessage === "function") {
+          SendMessage("FireBaseManager", "OnUserRobotsReceived", "error");
+        }
+        return;
       }
+  
+      // 2. Perform the Firestore query
+      firebase.firestore().collection("customRobots")
+        .doc(userId)
+        .collection("robots")
+        .get()
+        .then(function (querySnapshot) {
+          var robots = [];
+          querySnapshot.forEach(function (doc) {
+            var data = doc.data();
+            data._robotId = doc.id; // store doc ID
+            robots.push(data);
+          });
+          var robotsJson = JSON.stringify(robots);
+          console.log("✅ Got user robots JSON:", robotsJson);
+  
+          // 3. Send the JSON string back to Unity
+          if (typeof SendMessage === "function") {
+            SendMessage("FireBaseManager", "OnUserRobotsReceived", robotsJson);
+          } else {
+            console.warn("SendMessage is not defined!");
+          }
+        })
+        .catch(function (error) {
+          console.error("❌ Error fetching user robots:", error);
+          if (typeof SendMessage === "function") {
+            SendMessage("FireBaseManager", "OnUserRobotsReceived", "error");
+          }
+        });
+    }
 
   function _InitializeFirebase(callbackPtr) {
           if (!firebase.apps.length) {
