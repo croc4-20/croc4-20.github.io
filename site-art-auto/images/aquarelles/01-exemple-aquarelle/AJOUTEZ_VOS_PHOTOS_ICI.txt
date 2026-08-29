@@ -1,0 +1,9 @@
+Ajoutez une ou plusieurs photos dans ce dossier.
+
+Exemples :
+01.jpg
+02.jpg
+03.jpg
+
+Le premier fichier par ordre alphabétique devient la couverture.
+Vous pouvez aussi ajouter "cover": "02.jpg" dans info.json.
