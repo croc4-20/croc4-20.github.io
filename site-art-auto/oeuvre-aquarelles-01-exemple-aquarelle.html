@@ -40,7 +40,11 @@
 
   <div class="work-layout">
     <section class="work-gallery">
-      <div class="hero-placeholder">Aucune photo dans ce dossier.</div>
+      
+<button class="main-photo-button" type="button" id="main-photo-button">
+  <img class="main-photo" id="main-photo" src="images/aquarelles/01-exemple-aquarelle/01.jpg" alt="Titre de l’aquarelle">
+</button>
+
       
     </section>
 
@@ -51,7 +55,7 @@
         <dt>Technique</dt><dd>Aquarelle sur papier</dd>
         <dt>Dimensions</dt><dd>30 × 40 cm</dd>
         
-        
+        <dt>Photographies</dt><dd>1</dd>
       </dl>
       
     </aside>
@@ -67,7 +71,7 @@
 
 <script>
 (() => {
-  const images = [];
+  const images = ["images/aquarelles/01-exemple-aquarelle/01.jpg"];
   if (!images.length) return;
 
   const main = document.getElementById('main-photo');
