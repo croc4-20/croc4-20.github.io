@@ -40,8 +40,46 @@
 
   <div class="work-layout">
     <section class="work-gallery">
-      <div class="hero-placeholder">Aucune photo dans ce dossier.</div>
       
+<button class="main-photo-button" type="button" id="main-photo-button">
+  <img class="main-photo" id="main-photo" src="images/dessins/01-exemple-dessin/01.JPG" alt="Titre du dessin">
+</button>
+
+      <div class="thumbnails"><button class="thumbnail" type="button"
+                     data-src="images/dessins/01-exemple-dessin/01.JPG"
+                     aria-current="true">
+                   <img src="images/dessins/01-exemple-dessin/01.JPG" alt="Titre du dessin — vue 1" loading="lazy">
+                 </button>
+<button class="thumbnail" type="button"
+                     data-src="images/dessins/01-exemple-dessin/02.JPG"
+                     aria-current="false">
+                   <img src="images/dessins/01-exemple-dessin/02.JPG" alt="Titre du dessin — vue 2" loading="lazy">
+                 </button>
+<button class="thumbnail" type="button"
+                     data-src="images/dessins/01-exemple-dessin/03.JPG"
+                     aria-current="false">
+                   <img src="images/dessins/01-exemple-dessin/03.JPG" alt="Titre du dessin — vue 3" loading="lazy">
+                 </button>
+<button class="thumbnail" type="button"
+                     data-src="images/dessins/01-exemple-dessin/04.JPG"
+                     aria-current="false">
+                   <img src="images/dessins/01-exemple-dessin/04.JPG" alt="Titre du dessin — vue 4" loading="lazy">
+                 </button>
+<button class="thumbnail" type="button"
+                     data-src="images/dessins/01-exemple-dessin/05.JPG"
+                     aria-current="false">
+                   <img src="images/dessins/01-exemple-dessin/05.JPG" alt="Titre du dessin — vue 5" loading="lazy">
+                 </button>
+<button class="thumbnail" type="button"
+                     data-src="images/dessins/01-exemple-dessin/06.JPG"
+                     aria-current="false">
+                   <img src="images/dessins/01-exemple-dessin/06.JPG" alt="Titre du dessin — vue 6" loading="lazy">
+                 </button>
+<button class="thumbnail" type="button"
+                     data-src="images/dessins/01-exemple-dessin/07.JPG"
+                     aria-current="false">
+                   <img src="images/dessins/01-exemple-dessin/07.JPG" alt="Titre du dessin — vue 7" loading="lazy">
+                 </button></div>
     </section>
 
     <aside class="work-info">
@@ -51,7 +89,7 @@
         <dt>Technique</dt><dd>Fusain sur papier</dd>
         <dt>Dimensions</dt><dd>50 × 65 cm</dd>
         
-        
+        <dt>Photographies</dt><dd>7</dd>
       </dl>
       
     </aside>
@@ -67,7 +105,7 @@
 
 <script>
 (() => {
-  const images = [];
+  const images = ["images/dessins/01-exemple-dessin/01.JPG", "images/dessins/01-exemple-dessin/02.JPG", "images/dessins/01-exemple-dessin/03.JPG", "images/dessins/01-exemple-dessin/04.JPG", "images/dessins/01-exemple-dessin/05.JPG", "images/dessins/01-exemple-dessin/06.JPG", "images/dessins/01-exemple-dessin/07.JPG"];
   if (!images.length) return;
 
   const main = document.getElementById('main-photo');
