@@ -662,10 +662,8 @@
 
 .main-photo {
   width: 100%;
-  max-height: 78vh;
-  object-fit: contain;
+  height: auto;
   display: block;
-  background: #ded8ce;
 }
 
 .thumbnails {
