@@ -82,6 +82,7 @@ def artwork_from_folder(category_slug, folder):
         "folder_name": folder.name,
         "slug": slugify(folder.name),
         "prix": info.get("prix"),
+        "devise": info.get("devise", "EUR"),
         "title": title,
         "year": info.get("annee", ""),
         "technique": info.get("technique", ""),
