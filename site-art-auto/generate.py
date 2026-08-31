@@ -81,6 +81,7 @@ def artwork_from_folder(category_slug, folder):
         "folder": folder,
         "folder_name": folder.name,
         "slug": slugify(folder.name),
+        "prix": info.get("prix"),
         "title": title,
         "year": info.get("annee", ""),
         "technique": info.get("technique", ""),
@@ -291,6 +292,7 @@ def work_page(work):
         {info_row("Technique", work["technique"])}
         {info_row("Dimensions", work["dimensions"])}
         {info_row("Disponibilité", work["disponibilite"])}
+        {info_row("Prix", format_price(work["prix"], work["devise"]))}
         {info_row("Photographies", len(images) if images else "")}
       </dl>
       {'<div class="work-description">' + esc(work["description"]) + '</div>' if work["description"] else ''}
@@ -370,6 +372,16 @@ def work_page(work):
 </script>
 """
     return page(work["title"], body, current=work["category"])
+
+def format_price(price, currency="EUR"):
+
+    if price is None or price == "":
+        return ""
+
+    if currency == "EUR":
+        return f"{price:,} €".replace(",", " ")
+
+return f"{price:,} {currency}".replace(",", " ")
 
 def home_page(all_works):
     latest = []
