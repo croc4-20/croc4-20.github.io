@@ -382,7 +382,7 @@ def format_price(price, currency="EUR"):
     if currency == "EUR":
         return f"{price:,} €".replace(",", " ")
 
-return f"{price:,} {currency}".replace(",", " ")
+    return f"{price:,} {currency}".replace(",", " ")
 
 def home_page(all_works):
     latest = []
