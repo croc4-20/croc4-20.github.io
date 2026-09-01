@@ -293,8 +293,8 @@ def category_page(slug, works):
 
 <section class="gallery-period gallery-archive">
   <div class="period-head">
-    <h2>Archives</h2>
-    <span>Avant 2020</span>
+    <h2>Œuvres Anciennes</h2>
+    <span>Avant 2000</span>
   </div>
 
   <div class="artworks-grid">
