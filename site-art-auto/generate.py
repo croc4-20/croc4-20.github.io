@@ -211,18 +211,108 @@ def artwork_card(work):
 </figure>
 """
 
+# def category_page(slug, works):
+#     cfg = CATEGORIES[slug]
+#     cards = "\n".join(artwork_card(w) for w in works)
+
+#     if not cards:
+#         cards = """
+# <div class="empty-gallery">
+#   Aucun sous-dossier d'œuvre pour le moment.<br><br>
+#   Créez par exemple :<br>
+#   images/peintures/mon-oeuvre/
+# </div>
+# """
+
+#     body = f"""
+# <section class="category-head">
+#   <div class="eyebrow">Collection</div>
+#   <h1>{esc(cfg["label"])}</h1>
+#   <p>{esc(cfg["description"])} — {len(works)} œuvre{"s" if len(works) != 1 else ""}.</p>
+# </section>
+
+# <section class="artworks-grid">
+#   {cards}
+# </section>
+# """
+#     return page(cfg["label"], body, current=slug)
 def category_page(slug, works):
     cfg = CATEGORIES[slug]
-    cards = "\n".join(artwork_card(w) for w in works)
 
-    if not cards:
-        cards = """
-<div class="empty-gallery">
-  Aucun sous-dossier d'œuvre pour le moment.<br><br>
-  Créez par exemple :<br>
-  images/peintures/mon-oeuvre/
-</div>
+    if slug == "peintures":
+
+        recent = []
+        archive = []
+
+        for work in works:
+            try:
+                year = int(work["year"])
+            except (TypeError, ValueError):
+                year = 0
+
+            if year >= 2020:
+                recent.append(work)
+            else:
+                archive.append(work)
+
+        recent.sort(
+            key=lambda w: int(w["year"]) if str(w["year"]).isdigit() else 0,
+            reverse=True
+        )
+
+        archive.sort(
+            key=lambda w: int(w["year"]) if str(w["year"]).isdigit() else 0,
+            reverse=True
+        )
+
+        recent_cards = "\n".join(
+            artwork_card(w) for w in recent
+        )
+
+        archive_cards = "\n".join(
+            artwork_card(w) for w in archive
+        )
+
+        body = f"""
+<section class="category-head">
+  <div class="eyebrow">Collection</div>
+  <h1>{esc(cfg["label"])}</h1>
+  <p>{len(works)} œuvre{"s" if len(works) != 1 else ""}.</p>
+</section>
+
+<section class="gallery-period">
+  <div class="period-head">
+    <h2>Œuvres récentes</h2>
+    <span>2020 — aujourd’hui</span>
+  </div>
+
+  <div class="artworks-grid">
+    {recent_cards}
+  </div>
+</section>
+
+<section class="gallery-period gallery-archive">
+  <div class="period-head">
+    <h2>Archives</h2>
+    <span>Avant 2020</span>
+  </div>
+
+  <div class="artworks-grid">
+    {archive_cards}
+  </div>
+</section>
 """
+
+        return page(
+            cfg["label"],
+            body,
+            current=slug
+        )
+
+    # comportement normal pour dessins/sculptures/etc.
+    cards = "\n".join(
+        artwork_card(w) for w in works
+    )
 
     body = f"""
 <section class="category-head">
@@ -235,7 +325,12 @@ def category_page(slug, works):
   {cards}
 </section>
 """
-    return page(cfg["label"], body, current=slug)
+
+    return page(
+        cfg["label"],
+        body,
+        current=slug
+    )
 
 def info_row(term, value):
     if not value:
