@@ -826,3 +826,31 @@
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
+.gallery-period {
+  margin-top: 60px;
+}
+
+.period-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #111;
+  padding-bottom: 10px;
+}
+
+.period-head h2 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.period-head span {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.gallery-archive {
+  margin-top: 90px;
+}
