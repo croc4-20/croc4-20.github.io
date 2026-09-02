@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sans Titre 1996 — Véronique Collet</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="site">
+  
+<aside class="sidebar">
+  <div>
+    <div class="logo">VÉRONIQUE<br>COLLET</div>
+    <div class="logo-line"></div>
+    <div class="sidebar-desc">
+      Artiste<br>
+      peinture, sculpture,<br>
+      dessin, aquarelle
+    </div>
+    <div class="mark">A</div>
+  </div>
+  <div class="socials">IG<br>BE<br>FB</div>
+</aside>
+
+  <main class="content">
+    <header><nav><a href="index.html">ACCUEIL</a>
+<a href="peintures.html">PEINTURES</a>
+<a href="dessins.html" aria-current="page">DESSINS</a>
+<a href="sculptures.html">SCULPTURES</a>
+<a href="aquarelles.html">AQUARELLES</a>
+<a href="collages.html">COLLAGES</a></nav></header>
+    
+<article class="work-page">
+  <header class="work-header">
+    <a class="work-back" href="dessins.html">← Dessins</a>
+    <h1>Sans Titre 1996</h1>
+    <div class="work-summary">1996 · Acrylique, craies et collages sur papier · 30 x 22 cm</div>
+  </header>
+
+  <div class="work-layout">
+    <section class="work-gallery">
+      
+<button class="main-photo-button" type="button" id="main-photo-button">
+  <img class="main-photo" id="main-photo" src="images/dessins/014/sans titre 1996.JPG" alt="Sans Titre 1996">
+</button>
+
+      
+    </section>
+
+    <aside class="work-info">
+      <h2>Informations</h2>
+      <dl>
+        <dt>Année</dt><dd>1996</dd>
+        <dt>Technique</dt><dd>Acrylique, craies et collages sur papier</dd>
+        <dt>Dimensions</dt><dd>30 x 22 cm</dd>
+        <dt>Disponibilité</dt><dd>Disponible</dd>
+        <dt>Prix</dt><dd>100 €</dd>
+        <dt>Photographies</dt><dd>1</dd>
+      </dl>
+      
+    </aside>
+  </div>
+</article>
+
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <button class="lightbox-close" type="button" aria-label="Fermer">×</button>
+  <button class="lightbox-nav lightbox-prev" type="button" aria-label="Photo précédente">‹</button>
+  <img id="lightbox-image" alt="">
+  <button class="lightbox-nav lightbox-next" type="button" aria-label="Photo suivante">›</button>
+</div>
+
+<script>
+(() => {
+  const images = ["images/dessins/014/sans titre 1996.JPG"];
+  if (!images.length) return;
+
+  const main = document.getElementById('main-photo');
+  const mainButton = document.getElementById('main-photo-button');
+  const thumbs = [...document.querySelectorAll('.thumbnail')];
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImage = document.getElementById('lightbox-image');
+  const close = lightbox.querySelector('.lightbox-close');
+  const prev = lightbox.querySelector('.lightbox-prev');
+  const next = lightbox.querySelector('.lightbox-next');
+
+  let currentIndex = 0;
+
+  function setCurrent(index) {
+    currentIndex = (index + images.length) % images.length;
+    if (main) main.src = images[currentIndex];
+    thumbs.forEach((thumb, i) => {
+      thumb.setAttribute('aria-current', i === currentIndex ? 'true' : 'false');
+    });
+  }
+
+  thumbs.forEach((thumb, index) => {
+    thumb.addEventListener('click', () => setCurrent(index));
+  });
+
+  function openLightbox() {
+    lightboxImage.src = images[currentIndex];
+    lightbox.classList.add('open');
+    lightbox.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  function lightboxMove(delta) {
+    setCurrent(currentIndex + delta);
+    lightboxImage.src = images[currentIndex];
+  }
+
+  if (mainButton) mainButton.addEventListener('click', openLightbox);
+  close.addEventListener('click', closeLightbox);
+  prev.addEventListener('click', () => lightboxMove(-1));
+  next.addEventListener('click', () => lightboxMove(1));
+
+  lightbox.addEventListener('click', (event) => {
+    if (event.target === lightbox) closeLightbox();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (!lightbox.classList.contains('open')) return;
+    if (event.key === 'Escape') closeLightbox();
+    if (event.key === 'ArrowLeft') lightboxMove(-1);
+    if (event.key === 'ArrowRight') lightboxMove(1);
+  });
+})();
+</script>
+
+    
+<footer id="contact">
+  <div>
+    <h3>Véronique Collet</h3>
+    <p>© 2026<br>Tous droits réservés<br>Mentions légales</p>
+  </div>
+
+  <div>
+    <h3>Lettre d'atelier</h3>
+    <p>Recevez les nouvelles,<br>expositions et œuvres inédites.</p>
+    <div class="newsletter">
+      <input type="email" placeholder="votre e-mail">
+      <button type="button">→</button>
+    </div>
+  </div>
+
+  <div>
+    <h3>Contact</h3>
+    <p>
+      atelier@example.art<br>
+      Instagram<br>
+      Behance
+    </p>
+  </div>
+</footer>
+
+  </main>
+  <aside class="rightbar">ATELIER OUVERT SUR RENDEZ-VOUS</aside>
+</div>
+</body>
+</html>
