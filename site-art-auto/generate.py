@@ -25,9 +25,9 @@ CATEGORIES = {
         "label": "Aquarelles",
         "description": "Aquarelles et travaux à l’eau sur papier.",
     },
-    "collages": {
-        "label": "Collages",
-        "description": "Collages et techniques mixtes.",
+    "atelier": {
+        "label": "Atelier",
+        "description": "Photos d'atelier",
     },
 }
 
