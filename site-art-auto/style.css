@@ -414,15 +414,30 @@
         display: none;
       }
 
-      header {
+      /* header {
         padding: 25px;
         overflow-x: auto;
-      }
+      } */
 
-      nav {
+      header {
+          height: auto;
+          min-height: 70px;
+          padding: 15px 12px;
+          overflow: visible;
+        }
+
+      /* nav {
         gap: 25px;
-      }
-
+      } */
+      nav {
+          width: 100%;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 10px 18px;
+          font-size: 10px;
+          letter-spacing: 1px;
+        }
       .hero {
         grid-template-columns: 1fr;
       }
@@ -568,8 +583,9 @@
 .artwork-card img {
   width: 100%;
   height: auto;
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
+  /* aspect-ratio: 4 / 5; */
+  /* object-fit: cover; */
+  object-fit: contain;
   display: block;
   transition: transform .35s ease;
 }
