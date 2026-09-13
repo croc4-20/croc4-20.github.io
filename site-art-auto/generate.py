@@ -190,8 +190,11 @@ def artwork_card(work):
         visual = '<div class="hero-placeholder">Ajoutez au moins une photo dans ce dossier.</div>'
 
     count = len(work["images"])
-    badge = f'<span class="photo-count">{count} PHOTO{"S" if count > 1 else ""}</span>' if count else ""
-
+    badge = (
+        f'<span class="photo-count">{count} PHOTOS</span>'
+        if count > 1
+        else ""
+    )
     metadata = " — ".join(x for x in [str(work["year"]) if work["year"] else "", work["technique"]] if x)
     dimensions = work["dimensions"]
 
