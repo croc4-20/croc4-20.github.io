@@ -532,7 +532,7 @@ def home_page(all_works):
   <div class="exhibitions">
     <div class="label">Explorer</div>
     <h2>ŒUVRES<br>& TECHNIQUES</h2>
-    <p>Peinture, dessin, sculpture, aquarelle et collage.</p>
+    <p>Peinture, dessin, sculpture, aquarelle et atelier.</p>
   </div>
 </section>
 
