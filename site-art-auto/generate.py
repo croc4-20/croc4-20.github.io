@@ -504,10 +504,12 @@ def home_page(all_works):
   </div>
 
   <div class="hero-art">
-    <div class="hero-placeholder">
-      Cet emplacement peut recevoir plus tard une vraie photographie principale.
-    </div>
-  </div>
+  <img
+    class="hero-photo"
+    src="images/atelier/003/003.jpg"
+    alt="Atelier"
+  >
+</div>
 </section>
 
 <section class="manifesto-grid" id="infos">
