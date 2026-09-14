@@ -134,21 +134,20 @@ def footer():
     <p>© 2026<br>Tous droits réservés<br>Mentions légales</p>
   </div>
 
-  <div>
-    <h3>Lettre d'atelier</h3>
-    <p>Recevez les nouvelles,<br>expositions et œuvres inédites.</p>
-    <div class="newsletter">
-      <input type="email" placeholder="votre e-mail">
-      <button type="button">→</button>
-    </div>
-  </div>
+  //<div>
+    //<h3>Lettre d'atelier</h3>
+    //<p>Recevez les nouvelles,<br>expositions et œuvres inédites.</p>
+    //<div class="newsletter">
+      //<input type="email" placeholder="votre e-mail">
+      //<button type="button">→</button>
+    //</div>
+  //</div>
 
   <div>
     <h3>Contact</h3>
     <p>
-      atelier@example.art<br>
-      Instagram<br>
-      Behance
+      vro.collet@orange.fr<br>
+      0675726927<br>
     </p>
   </div>
 </footer>
@@ -498,7 +497,7 @@ def home_page(all_works):
             for w in latest
         )
     else:
-        preview = '<div class="hero-placeholder">Les œuvres apparaîtront ici après avoir ajouté leurs dossiers puis lancé generate.py.</div>'
+        preview = '<div class="hero-placeholder">Les œuvres apparaîtront ici après avoir ajouté leurs dossiers </div>'
 
     category_links = "".join(
         f'<a href="{slug}.html"><span>{esc(cfg["label"])}</span><span>→</span></a>'
@@ -508,7 +507,7 @@ def home_page(all_works):
     body = f"""
 <section class="hero" id="travaux">
   <div class="hero-copy">
-    <h1>L'ART<br>COMME<br>FRICTION</h1>
+    <h1>L'ART<br>COMME<br>EXPRESSION</h1>
     <div class="dash"></div>
     <a class="hero-link" href="#categories">Explorer le travail <span>→</span></a>
   </div>
