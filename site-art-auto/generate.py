@@ -506,7 +506,7 @@ def home_page(all_works):
   <div class="hero-art">
   <img
     class="hero-photo"
-    src="images/atelier/003/003.jpg"
+    src="images/atelier/003/003.JPG"
     alt="Atelier"
   >
 </div>
