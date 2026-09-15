@@ -1835,7 +1835,7 @@ def work_page(work):
       openLightbox
     );
 
-  }
+  }}
 
 
   close.addEventListener(
