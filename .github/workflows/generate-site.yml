@@ -23,7 +23,7 @@ jobs:
           python-version: "3.x"
 
       - name: Generate pages
-        run: python site-art-auto/generate.py
+        run: python generate.py
 
       - name: Commit generated pages
         run: |
