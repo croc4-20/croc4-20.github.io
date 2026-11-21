@@ -73,15 +73,53 @@ IMAGE_EXTENSIONS = {
 # ============================================================
 # OUTILS
 # ============================================================
+# def split_paintings(works):
+#     recent = []
+#     old = []
+
+#     for work in works:
+#         try:
+#             year = int(work["year"])
+#         except (TypeError, ValueError):
+#             year = 0
+
+#         if year >= 2020:
+#             recent.append(work)
+#         else:
+#             old.append(work)
+
+#     recent.sort(
+#         key=lambda w: int(w["year"]) if str(w["year"]).isdigit() else 0,
+#         reverse=True
+#     )
+
+#     old.sort(
+#         key=lambda w: int(w["year"]) if str(w["year"]).isdigit() else 0,
+#         reverse=True
+#     )
+
+#     return recent, old
+
 def split_paintings(works):
     recent = []
     old = []
 
+    def get_year(work):
+        value = (
+            work.get("year")
+            or work.get("date")
+            or ""
+        )
+
+        match = re.search(r"\b(19|20)\d{2}\b", str(value))
+
+        if match:
+            return int(match.group())
+
+        return 0
+
     for work in works:
-        try:
-            year = int(work["year"])
-        except (TypeError, ValueError):
-            year = 0
+        year = get_year(work)
 
         if year >= 2020:
             recent.append(work)
@@ -89,17 +127,16 @@ def split_paintings(works):
             old.append(work)
 
     recent.sort(
-        key=lambda w: int(w["year"]) if str(w["year"]).isdigit() else 0,
+        key=get_year,
         reverse=True
     )
 
     old.sort(
-        key=lambda w: int(w["year"]) if str(w["year"]).isdigit() else 0,
+        key=get_year,
         reverse=True
     )
 
     return recent, old
-
 
 def painting_period_page(title, works, period_label, current=None):
     cards = "\n".join(
