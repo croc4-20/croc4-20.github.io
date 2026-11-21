@@ -99,7 +99,6 @@ IMAGE_EXTENSIONS = {
 #     )
 
 #     return recent, old
-
 def split_paintings(works):
     recent = []
     old = []
@@ -121,10 +120,23 @@ def split_paintings(works):
     for work in works:
         year = get_year(work)
 
+        print(
+            "DEBUG PAINTING:",
+            work["folder_name"],
+            work["title"],
+            repr(work["year"]),
+            repr(work["date"]),
+            "=>",
+            year
+        )
+
         if year >= 2020:
             recent.append(work)
         else:
             old.append(work)
+
+    print("RECENT:", [w["title"] for w in recent])
+    print("OLD:", [w["title"] for w in old])
 
     recent.sort(
         key=get_year,
@@ -137,6 +149,43 @@ def split_paintings(works):
     )
 
     return recent, old
+# def split_paintings(works):
+#     recent = []
+#     old = []
+
+#     def get_year(work):
+#         value = (
+#             work.get("year")
+#             or work.get("date")
+#             or ""
+#         )
+
+#         match = re.search(r"\b(19|20)\d{2}\b", str(value))
+
+#         if match:
+#             return int(match.group())
+
+#         return 0
+
+#     for work in works:
+#         year = get_year(work)
+
+#         if year >= 2020:
+#             recent.append(work)
+#         else:
+#             old.append(work)
+
+#     recent.sort(
+#         key=get_year,
+#         reverse=True
+#     )
+
+#     old.sort(
+#         key=get_year,
+#         reverse=True
+#     )
+
+#     return recent, old
 
 def painting_period_page(title, works, period_label, current=None):
     cards = "\n".join(
@@ -711,6 +760,21 @@ def category_page(slug, works):
         archive = []
 
         for work in works:
+            output_path = ROOT / work_filename(work)
+
+            print(
+                "WRITE:",
+                repr(str(output_path)),
+                "| folder:",
+                repr(work["folder_name"]),
+                "| title:",
+                repr(work["title"])
+            )
+
+            output_path.write_text(
+                work_page(work),
+                encoding="utf-8"
+            )
 
             try:
 
